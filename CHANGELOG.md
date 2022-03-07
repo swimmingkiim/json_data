@@ -1,3 +1,6 @@
 ## 0.0.1
-
-* TODO: Describe initial release.
+initialize json_data package
+* toJsonString
+* toJsonArrayString
+* fromJsonString
+* fromJsonArrayString
