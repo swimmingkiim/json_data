@@ -5,7 +5,7 @@ import 'dart:convert';
 class JsonData {
   JsonData();
 
-  static dynamic convertValue(dynamic value,
+  static dynamic _convertValue(dynamic value,
       {bool wrapStringWithDoubleQuote = true}) {
     if (value is String) {
       if (wrapStringWithDoubleQuote) {
@@ -22,10 +22,10 @@ class JsonData {
         }
       }
     } else if (value is List) {
-      return toJsonArray(value,
+      return _toJsonArray(value,
           wrapStringWithDoubleQuote: wrapStringWithDoubleQuote);
     } else if (value is Map) {
-      return toJson(value,
+      return _toJson(value,
           wrapStringWithDoubleQuote: wrapStringWithDoubleQuote);
     } else if (value is bool) {
       return value;
@@ -35,11 +35,12 @@ class JsonData {
     return value;
   }
 
-  static toJson(Map<dynamic, dynamic> data,
+  static _toJson(Map<dynamic, dynamic> data,
       {bool wrapStringWithDoubleQuote = false}) {
     return data.map((key, value) => MapEntry(
-        convertValue(key, wrapStringWithDoubleQuote: wrapStringWithDoubleQuote),
-        convertValue(value,
+        _convertValue(key,
+            wrapStringWithDoubleQuote: wrapStringWithDoubleQuote),
+        _convertValue(value,
             wrapStringWithDoubleQuote: wrapStringWithDoubleQuote)));
   }
 
@@ -47,17 +48,17 @@ class JsonData {
       {bool wrapStringWithDoubleQuote = true}) {
     return data
         .map((key, value) => MapEntry(
-            convertValue(key,
+            _convertValue(key,
                 wrapStringWithDoubleQuote: wrapStringWithDoubleQuote),
-            convertValue(value,
+            _convertValue(value,
                 wrapStringWithDoubleQuote: wrapStringWithDoubleQuote)))
         .toString();
   }
 
-  static toJsonArray(List<dynamic> dataList,
+  static _toJsonArray(List<dynamic> dataList,
       {bool wrapStringWithDoubleQuote = false}) {
     return dataList
-        .map((data) => convertValue(data,
+        .map((data) => _convertValue(data,
             wrapStringWithDoubleQuote: wrapStringWithDoubleQuote))
         .toList();
   }
@@ -65,51 +66,51 @@ class JsonData {
   static String toJsonArrayString(List<dynamic> dataList,
       {bool wrapStringWithDoubleQuote = true}) {
     return dataList
-        .map((data) => convertValue(data,
+        .map((data) => _convertValue(data,
             wrapStringWithDoubleQuote: wrapStringWithDoubleQuote))
         .toList()
         .toString();
   }
 
-  static Map<String, dynamic> fromJson(String source) {
+  static Map<String, dynamic> fromJsonString(String source) {
     var result = jsonDecode(source) as Map<String, dynamic>;
     for (var key in result.keys) {
       if (result[key] is String) {
         if (result[key].toString().startsWith('[') &&
             result[key].toString().endsWith(']')) {
-          result[key] = JsonData.fromJsonArray(result[key].toString());
+          result[key] = JsonData.fromJsonArrayString(result[key].toString());
         } else if (result[key].toString().startsWith('{') &&
             result[key].toString().endsWith('}')) {
-          result[key] = JsonData.fromJson(result[key]);
+          result[key] = JsonData.fromJsonString(result[key]);
         } else {
-          result[key] = JsonData.convertValue(result[key],
+          result[key] = JsonData._convertValue(result[key],
               wrapStringWithDoubleQuote: false);
         }
       } else {
-        result[key] = JsonData.convertValue(result[key],
+        result[key] = JsonData._convertValue(result[key],
             wrapStringWithDoubleQuote: false);
       }
     }
     return Map<String, dynamic>.from(result);
   }
 
-  static List<dynamic> fromJsonArray(String source) {
+  static List<dynamic> fromJsonArrayString(String source) {
     var result = jsonDecode(source) as List<dynamic>;
     for (var i = 0; i < result.length; i++) {
       if (result[i] is String) {
         if (result[i].toString().startsWith('[') &&
             result[i].toString().endsWith(']')) {
-          result[i] = JsonData.fromJsonArray(result[i].toString());
+          result[i] = JsonData.fromJsonArrayString(result[i].toString());
         } else if (result[i].toString().startsWith('{') &&
             result[i].toString().endsWith('}')) {
-          result[i] = JsonData.fromJson(result[i].toString());
+          result[i] = JsonData.fromJsonString(result[i].toString());
         } else {
-          result[i] = JsonData.convertValue(result[i],
+          result[i] = JsonData._convertValue(result[i],
               wrapStringWithDoubleQuote: false);
         }
       } else {
         result[i] =
-            JsonData.convertValue(result[i], wrapStringWithDoubleQuote: false);
+            JsonData._convertValue(result[i], wrapStringWithDoubleQuote: false);
       }
     }
     return List<dynamic>.from(result);

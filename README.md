@@ -11,29 +11,45 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages). 
 -->
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+# json_data
+Helper package for converting nested json
 
 ## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+* string -> json array (List)
+* string -> json object (Map)
+* List -> stringified json
+* Map -> stringified json
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+* No prerequisites required
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
-
 ```dart
-const like = 'sample';
+// return : stringified json
+JsonData.toJsonString({
+      'hello': 'world',
+      'list': [
+        1,
+        null,
+        true,
+        'flutter',
+        false,
+        [456, 654],
+        {
+          'deep-level': null,
+          'deeper-level': {'hello': 'world'}
+        }
+      ]
+    });
+```
+```dart
+// return : Map<String, dynamic>
+JsonData.fromJsonString(
+        '{"hello": "world", "list": [1, null, true, "flutter", false, [456, 654], {"deep-level": null, "deeper-level": {"hello": "world"}}]}')
 ```
 
 ## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+* If you have any issue or suggestion contact me via github.
+[github repository](https://github.com/swimmingkiim/json_data)
